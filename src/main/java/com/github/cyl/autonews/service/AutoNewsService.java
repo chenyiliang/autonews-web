@@ -1,6 +1,7 @@
 package com.github.cyl.autonews.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,8 @@ import com.yicai.autonews.articlegenerator.ArticleGenerator;
 public class AutoNewsService {
 	public String generateOneArticleStr(int year, int month) {
 		String articleStr = "";
-		Article article = new ArticleGenerator().newsArticle(year, month);
+		Map<String, Object> map = new ArticleGenerator().newsArticle(year, month);
+		Article article = (Article) map.get("article");
 		String title = article.getTitle();
 		articleStr = assembleArticleStr(articleStr, title, true, "<center><h4>", "</h4></center>");
 		List<Section> sections = article.getSections();
@@ -54,9 +56,9 @@ public class AutoNewsService {
 	}
 
 	private String wrapSentence(String sentence, int type, double similarity) {
-		if (type == 1) {
+		if (type == 1 && sentence != null && !sentence.isEmpty()) {
 			sentence = "<span style='color: darkgreen;'>" + sentence + "</span>";
-		} else if (type == 2) {
+		} else if (type == 2 && sentence != null && !sentence.isEmpty()) {
 			sentence = "<span style='color: blue;'>" + sentence + "</span><span style='color: red;'>[" + similarity
 					+ "]</span>";
 		}
