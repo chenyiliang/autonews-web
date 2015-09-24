@@ -8,38 +8,50 @@ import com.github.cyl.autonews.pojo.analysis.Article;
 import com.github.cyl.autonews.pojo.analysis.Paragraph;
 import com.github.cyl.autonews.pojo.analysis.Section;
 import com.github.cyl.autonews.pojo.analysis.Sentence;
+import com.yicai.autonews.articlegenerator.ArticleGenerator;
 
 @Service
 public class AutoNewsService {
 	public String generateOneArticleStr(int year, int month) {
 		String articleStr = "";
-		Article article = new Article();
+		Article article = new ArticleGenerator().newsArticle(year, month);
 		String title = article.getTitle();
-		assembleArticleStr(articleStr, title, true);
+		articleStr = assembleArticleStr(articleStr, title, true, "<center><h4>", "</h4></center>");
 		List<Section> sections = article.getSections();
 		for (Section section : sections) {
 			String subTitle = section.getSubTitle();
-			assembleArticleStr(articleStr, subTitle, true);
+			articleStr = assembleArticleStr(articleStr, subTitle, true, "<h5>", "</h5>");
 			List<Paragraph> paragraphs = section.getParagraphs();
 			for (Paragraph paragraph : paragraphs) {
 				List<Sentence> sentences = paragraph.getSentences();
-				for (Sentence sentence : sentences) {
-					String str = sentence.getSentence();
-					assembleArticleStr(articleStr, str, false);
+				for (int i = 0; i < sentences.size(); i++) {
+					String str = sentences.get(i).getSentence();
+					if (i == 0) {
+						articleStr = assembleArticleStr(articleStr, str, false, "<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "");
+					} else if (i == sentences.size() - 1) {
+						articleStr = assembleArticleStr(articleStr, str, false, "", "</div>");
+					} else {
+						articleStr = assembleArticleStr(articleStr, str, false, "", "");
+					}
 				}
-				assembleArticleStr(articleStr, "\r\n", false);
+				articleStr = assembleArticleStr(articleStr, "\r\n", false, "", "");
 			}
 		}
-		return "样本文章" + year + "年" + month + "月，时间戳" + System.currentTimeMillis()
-				+ "***************************************************************1234567890";
+		return articleStr;
 	}
 
-	private void assembleArticleStr(String origin, String append, boolean isWrap) {
+	private String assembleArticleStr(String origin, String append, boolean isWrap, String prefix, String suffix) {
 		if (append != null && !append.isEmpty()) {
-			origin += append;
+			origin += (prefix + append + suffix);
 			if (isWrap) {
 				origin += "\r\n";
 			}
 		}
+		return origin;
+	}
+
+	public static void main(String[] args) {
+		String articleStr = new AutoNewsService().generateOneArticleStr(2015, 6);
+		System.out.println(System.getenv("Path"));
 	}
 }

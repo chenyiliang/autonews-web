@@ -25,6 +25,7 @@ public class AutoNewsController {
 		int month = Integer.valueOf(date.substring(4, 6));
 		String articleStr = autoNewsService.generateOneArticleStr(year, month);
 		map.put("article", articleStr);
+		System.out.println(map);
 		return map;
 	}
 }

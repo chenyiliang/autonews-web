@@ -20,7 +20,7 @@
 </head>
 <body>
 	<center>
-		<div id="p" class="easyui-panel" title="第一财经宏观经济新闻自动生成演示" style="width: 600px; height: 400px; background: #fafafa;"
+		<div id="p" class="easyui-panel" title="第一财经宏观经济新闻自动生成演示" style="width: 600px; height: 800px; background: #fafafa;"
 			data-options="footer:'#ft'">
 			<div id="cc" class="easyui-layout" data-options="fit:'true'">
 				<div data-options="region:'north',border:false" style="height: 40px; background-color: #F4F4F4">
