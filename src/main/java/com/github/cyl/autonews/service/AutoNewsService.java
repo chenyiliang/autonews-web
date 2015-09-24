@@ -25,9 +25,12 @@ public class AutoNewsService {
 			for (Paragraph paragraph : paragraphs) {
 				List<Sentence> sentences = paragraph.getSentences();
 				for (int i = 0; i < sentences.size(); i++) {
-					String str = sentences.get(i).getSentence();
+					Sentence sentence = sentences.get(i);
+					String str = sentence.getSentence();
+					str = wrapSentence(str, sentence.getType(), sentence.getSimilarity());
 					if (i == 0) {
-						articleStr = assembleArticleStr(articleStr, str, false, "<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "");
+						articleStr = assembleArticleStr(articleStr, str, false,
+								"<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "");
 					} else if (i == sentences.size() - 1) {
 						articleStr = assembleArticleStr(articleStr, str, false, "", "</div>");
 					} else {
@@ -48,6 +51,16 @@ public class AutoNewsService {
 			}
 		}
 		return origin;
+	}
+
+	private String wrapSentence(String sentence, int type, double similarity) {
+		if (type == 1) {
+			sentence = "<span style='color: darkgreen;'>" + sentence + "</span>";
+		} else if (type == 2) {
+			sentence = "<span style='color: blue;'>" + sentence + "</span><span style='color: red;'>[" + similarity
+					+ "]</span>";
+		}
+		return sentence;
 	}
 
 	public static void main(String[] args) {
